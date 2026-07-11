@@ -135,12 +135,27 @@ Or use natural language triggers:
 - "生成下周前瞻"
 
 The skill will:
-1. Execute parallel multi-channel web searches (4+4 rounds)
+1. Execute parallel Chinese-platform searches via Agent-Reach (B站/小红书/微博/YouTube) + multi-channel web searches (4+4 rounds)
 2. Filter and prioritize by relevance and source authority
 3. Write expert analysis with historical context and dissenting viewpoints
 4. Output a rich, self-contained HTML file to `D:\news\`
 
 ### Search Pipeline · 搜索流程
+
+The pipeline runs two phases in parallel:
+
+**Phase 1: Chinese Platform Intelligence (Agent-Reach, parallel 4-way)**
+
+Many first-hand Chinese AI/industry insights surface on social platforms, not English media. Using [Agent-Reach](https://github.com/Panniantong/Agent-Reach):
+
+1. **B站 (Bilibili)** — semiconductor/AI/new-energy technical analysis video transcripts
+2. **小红书 (Xiaohongshu)** — industry practitioner first-hand reports, policy ground-level feedback
+3. **微博 (Weibo)** — policy hot searches, official announcements, breaking events
+4. **YouTube** — Chinese/English technical deep dives, institutional analysis
+
+> Agent-Reach config: `~/.agent-reach/config.yaml`. Xiaohongshu/Weibo require Cookie (say "帮我配小红书" to Claude to auto-configure). Use a dedicated alt account.
+
+**Phase 2: English Web Search (WebSearch, 4+4 rounds)**
 
 **Round 1 (parallel 4-way):**
 1. 中国产业政策最新动态（新能源/电动车/半导体/房地产/消费/农业）
@@ -171,9 +186,9 @@ claude-code-policy-tracker/
 
 ## Design Principles · 设计理念
 
-1. **聪明学生的信息望远镜** — 不是基金经理视角，不是纯新闻聚合；解释"这意味着什么"+"它跟另一件事有什么关系"+"我比别人早多久知道"
+1. **中文平台一手资讯（Agent-Reach）** — B站/小红书/微博/YouTube 产业一线信息，中英文源并行
 2. **每条拆解四个要素**：为什么现在出 → 历史参照 → 反对观点 → 后续演化
-3. **来源分级透明**：🟢 官方一手公告 > 🔵 权威媒体 > ⚪ 券商智库
+3. **来源分级透明**：🟣 中文平台一手资讯 > 🟢 官方一手公告 > 🔵 权威媒体 > ⚪ 券商智库
 4. **金额精确**：绝不写"—"，必须填具体数字或解释为什么无法公开获取
 5. **自包含 HTML**：不依赖 markdown 渲染，直接输出样式完备的 HTML 文件
 
